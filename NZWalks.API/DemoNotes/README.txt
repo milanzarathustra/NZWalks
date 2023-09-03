@@ -55,6 +55,16 @@ View, Other Windows, C# interactive console to generate things like guid etc -- 
 
 TODO After end of tutorial
 
-Add Tests to everything we currently have, testing controllers and repositories
+migrate to another db instead of sql - find out what AWS cheaper ones are with security and backups possibly mongo db and obviously something that supports EF CORE
+
+learn how to Encapsulate the things in the controller to the a seperate class like a command? 
 
 Add forgot password and reset password
+
+Instead of having images in local folder, store them as blob in db OR AWS FILE Image thing - Image and Video Uploading 
+
+Add Tests to everything we currently have, testing controllers and repositories
+
+Use enums for type such as roles/permissions
+
+Once created a script for packages needed and renamed project setup and create aws account
