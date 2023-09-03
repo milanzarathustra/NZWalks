@@ -5,9 +5,8 @@ namespace NZWalks.API.Data
 {
     public class NZWalksDbContext: DbContext
     {
-        public NZWalksDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
-        {
-                        
+        public NZWalksDbContext(DbContextOptions<NZWalksDbContext> dbContextOptions) : base(dbContextOptions)
+        {                  
         }
 
         public DbSet<Difficulty> Difficulties { get; set; }
@@ -44,7 +43,6 @@ namespace NZWalks.API.Data
             modelBuilder.Entity<Difficulty>().HasData(difficulties);
 
             //Seed data for regions
-
             var region = new List<Region>()
             {
                 new Region()

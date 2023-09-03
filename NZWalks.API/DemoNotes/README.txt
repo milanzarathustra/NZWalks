@@ -1,4 +1,16 @@
-﻿-----Full tutorial------
+﻿Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Tools
+
+Automapper
+Automapper.Extensions.Microsoft.DependencyInjection
+
+Microsoft.AspNetCore.Authentication.JwtBearer
+Microsoft.IdentityModel.Tokens
+System.IdentityModel.Tokens.Jwt
+Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+
+-----Full tutorial------
 https://leidos.udemy.com/course/build-rest-apis-with-aspnet-core-web-api-entity-framework
 
 //Information is gathered from the db context to create c# classes which will act as sql tables --> c# will convert to sql tables
@@ -8,6 +20,14 @@ Add-Migration "Name of Migration"
 //Now run the Migration to Update the database of any missing tables doing: 
 
 Update-Database
+
+//ALTERNATIVE: If you have multiple db contexts then you have to do:
+
+Add-Migration "Name of Migration -Context "Name of DB Context in Data folder"
+
+//Same applies to update database
+
+Update-Database -Context "Name of DB Context in Data folder"
 
 -----------------------------------------
 
@@ -29,6 +49,12 @@ CreateMap<UserDTO, UserDomain>()
 
 ---------------------------------------
 
-View, Other Windows, C# interactive console to generate things like guid etc
+View, Other Windows, C# interactive console to generate things like guid etc -- Guid.NewGuid()
 
 --------------------------------------
+
+TODO After end of tutorial
+
+Add Tests to everything we currently have, testing controllers and repositories
+
+Add forgot password and reset password
