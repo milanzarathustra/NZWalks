@@ -32,6 +32,8 @@ namespace NZWalks.API.Controllers
         {
             var walksDomain = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, IsAscending ?? true, pageNumber, pageSize);
 
+            throw new Exception("This is a custom exception");
+
             return Ok(mapper.Map<List<WalkDto>>(walksDomain));
         }
 
