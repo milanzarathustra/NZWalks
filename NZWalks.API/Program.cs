@@ -19,8 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 var logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("Logs/NZWalks_Log.txt", rollingInterval: RollingInterval.Minute) //Use Day for real life scenarios
+    .WriteTo.File("Logs/NZWalks_Log.txt", rollingInterval: RollingInterval.Day) //Use Day for real life scenarios
     .MinimumLevel.Warning()
     .CreateLogger();
 

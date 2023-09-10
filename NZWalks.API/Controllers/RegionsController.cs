@@ -35,8 +35,6 @@ namespace NZWalks.API.Controllers
         {
             var regionsDomain = await regionRepository.GetAllAsync();
 
-            logger.LogInformation($"Finished GetAllRegions request with data : {JsonSerializer.Serialize(regionsDomain)}");
-
             return Ok(mapper.Map<List<RegionDto>>(regionsDomain));
         }
 
