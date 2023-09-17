@@ -11,6 +11,7 @@ using NZWalks.API.Middlewares.Exceptions;
 using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
 using NZWalks.API.Repositories.Regions;
+using NZWalks.API.Repositories.Token;
 using NZWalks.API.Repositories.Upload;
 using NZWalks.API.Repositories.Walks;
 using Serilog;
@@ -71,6 +72,7 @@ builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IImageRepository, LocalImageRespository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 builder.Services.AddOptions<AuthenticationConfiguration>()
     .Bind(builder.Configuration.GetSection("Authentication"));

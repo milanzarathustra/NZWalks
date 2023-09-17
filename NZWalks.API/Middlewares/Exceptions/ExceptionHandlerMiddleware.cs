@@ -20,7 +20,6 @@ namespace NZWalks.API.Middlewares.Exceptions
             try
             {
                 await next(httpContext);
-
             }
             catch (Exception ex)
             {

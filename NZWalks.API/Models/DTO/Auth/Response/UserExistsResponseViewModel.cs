@@ -1,6 +1,6 @@
 ﻿namespace NZWalks.API.Models.DTO.Auth.Response
 {
-    public class UserExistsResponseDto
+    public class UserExistsResponseViewModel
     {
         public string Username { get; set; }
 

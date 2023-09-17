@@ -6,6 +6,7 @@ using NZWalks.API.Models.DTO.Auth.Request;
 using NZWalks.API.Models.DTO.Auth.Response;
 using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
+using NZWalks.API.Repositories.Token;
 
 namespace NZWalks.API.Controllers
 {
@@ -16,120 +17,61 @@ namespace NZWalks.API.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly AppSettings appSettings;
         private readonly ITokenRepository tokenRepository;
+        private readonly IAuthRepository authRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager, AppSettings appSettings, ITokenRepository tokenRepository)
+        public AuthController(UserManager<IdentityUser> userManager, AppSettings appSettings, ITokenRepository tokenRepository, IAuthRepository authRepository)
         {
             this.userManager = userManager;
             this.appSettings = appSettings;
             this.tokenRepository = tokenRepository;
+            this.authRepository = authRepository;
         }
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequestDto)
         {
-            var identityUser = new IdentityUser
-            {
-                UserName = registerRequestDto.Username,
-                Email = registerRequestDto.Username
-            };
+            var response = await authRepository.Register(registerRequestDto);
 
-            var user = await userManager.FindByEmailAsync(registerRequestDto.Username);
+            if (response.HasErrors)
+                return BadRequest(response);
 
-            if (user != null) 
-            {
-                return Conflict("User already exists");
-            }
-
-            var identityResult = await userManager.CreateAsync(identityUser, registerRequestDto.Password);
-
-            if (identityResult.Succeeded)
-            {
-                //In Trainer app we will default roles here instead of doing it from the api
-                if (registerRequestDto.Roles != null && registerRequestDto.Roles.Any())
-                {
-                    identityResult = await userManager.AddToRolesAsync(identityUser, registerRequestDto.Roles);
-
-                    if (identityResult.Succeeded)
-                    {
-                        return Ok($"{identityUser.UserName} was registered!"); //Might be better to return object here and in this complete method (look at other methods too)
-                    }
-                }
-            } 
-            else
-            {
-                return BadRequest(identityResult.Errors);
-            }
-
-            return BadRequest("Something went wrong");
+            return Ok(response);
         }
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            var user = await userManager.FindByEmailAsync(loginRequestDto.Username);
+            var loginResponse = await authRepository.Login(loginRequest);
 
-            if (user != null) 
-            { 
-                var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
-
-                if (checkPasswordResult)
-                {
-                    var roles = await userManager.GetRolesAsync(user);
-                    
-                    if (roles != null)
-                    {
-                        var authToken = tokenRepository.GenerateJWTToken(user, roles.ToList());
-                        var refreshToken = tokenRepository.GenerateRefreshToken();
-
-                        await userManager.SetAuthenticationTokenAsync(
-                            user,
-                            appSettings.AppName,
-                            EnumMemberNames.GetEnumMemberValue(ApplicationSettingsEnum.RefreshToken) ?? "",
-                            refreshToken);
-
-                        var response = new LoginResponseDto
-                        {
-                            AuthenticationToken = authToken,
-                            RefreshToken = refreshToken
-                        };
-
-                        return Ok(response);
-                    }
-                }
-            }
-
-            return BadRequest("Username or password was Incorrect");
+            if (loginResponse.HasErrors)
+                return BadRequest(loginResponse);
+            
+            return Ok(loginResponse);
         }
 
         [HttpGet]
         [Route("UserExists/{userName}")]
         public async Task<IActionResult> UserExists([FromRoute] string userName)
         {
-            var user = await userManager.FindByEmailAsync(userName);
+            var user = await authRepository.UserExists(userName);
 
-            var userExistsResponse = new UserExistsResponseDto
-            {
-                Username = userName,
-                Exists = user != null
-            };
-
-            return Ok(userExistsResponse);
+            return Ok(await authRepository.UserExists(userName));
         }
 
         [HttpPost]
         [Route("Refresh")]
         public async Task<IActionResult> Refresh([FromRoute] RefreshRequestDto refreshRequestDto)
         {
-            bool isValidRefreshToken = tokenRepository.ValidateRefreshToken(refreshRequestDto.RefreshToken);
+            //bool isValidRefreshToken = tokenRepository.ValidateRefreshToken(refreshRequestDto.RefreshToken);
 
-            if (!isValidRefreshToken)
-            {
-                return BadRequest(new ErrorResponse("Invalid Refresh Token"));
-            }
+            //if (!isValidRefreshToken)
+            //{
+            //    return BadRequest(new ErrorResponse("Invalid Refresh Token"));
+            //}
 
-            userManager.SetAuthenticationTokenAsync
+            //userManager.SetAuthenticationTokenAsync
         }
     }
 }
