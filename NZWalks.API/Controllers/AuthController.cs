@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.Enums;
+using NZWalks.API.Enums.Global;
 using NZWalks.API.Models.DTO.Auth.Request;
 using NZWalks.API.Models.DTO.Auth.Response;
 using NZWalks.API.Models.Shared;
@@ -12,11 +14,13 @@ namespace NZWalks.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly AppSettings appSettings;
         private readonly ITokenRepository tokenRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
+        public AuthController(UserManager<IdentityUser> userManager, AppSettings appSettings, ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
+            this.appSettings = appSettings;
             this.tokenRepository = tokenRepository;
         }
 
@@ -79,6 +83,12 @@ namespace NZWalks.API.Controllers
                         var authToken = tokenRepository.GenerateJWTToken(user, roles.ToList());
                         var refreshToken = tokenRepository.GenerateRefreshToken();
 
+                        await userManager.SetAuthenticationTokenAsync(
+                            user,
+                            appSettings.AppName,
+                            EnumMemberNames.GetEnumMemberValue(ApplicationSettingsEnum.RefreshToken) ?? "",
+                            refreshToken);
+
                         var response = new LoginResponseDto
                         {
                             AuthenticationToken = authToken,
@@ -109,8 +119,8 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpPost]
-        [Route("RefreshToken")]
-        public async Task<IActionResult> RefreshToken([FromRoute] RefreshRequestDto refreshRequestDto)
+        [Route("Refresh")]
+        public async Task<IActionResult> Refresh([FromRoute] RefreshRequestDto refreshRequestDto)
         {
             bool isValidRefreshToken = tokenRepository.ValidateRefreshToken(refreshRequestDto.RefreshToken);
 

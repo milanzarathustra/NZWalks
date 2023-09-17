@@ -76,6 +76,10 @@ builder.Services.AddOptions<AuthenticationConfiguration>()
     .Bind(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AuthenticationConfiguration>>().Value);
 
+builder.Services.AddOptions<AppSettings>()
+    .Bind(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AppSettings>>().Value);
+
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 builder.Services.AddIdentityCore<IdentityUser>()
