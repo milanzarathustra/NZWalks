@@ -4,6 +4,8 @@ namespace NZWalks.API.Repositories.Auth
 {
     public interface ITokenRepository
     {
-        string CreateJWTToken(IdentityUser user, List<string> roles);
+        string GenerateJWTToken(IdentityUser user, List<string> roles);
+        string GenerateRefreshToken();
+        bool ValidateRefreshToken(string refreshToken);
     }
 }

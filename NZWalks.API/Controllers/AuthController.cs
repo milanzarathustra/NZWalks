@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NZWalks.API.Models.DTO.Auth;
+using NZWalks.API.Models.DTO.Auth.Request;
+using NZWalks.API.Models.DTO.Auth.Response;
+using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
 
 namespace NZWalks.API.Controllers
@@ -74,11 +76,13 @@ namespace NZWalks.API.Controllers
                     
                     if (roles != null)
                     {
-                        var authToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+                        var authToken = tokenRepository.GenerateJWTToken(user, roles.ToList());
+                        var refreshToken = tokenRepository.GenerateRefreshToken();
 
                         var response = new LoginResponseDto
                         {
-                            AuthenticationToken = authToken
+                            AuthenticationToken = authToken,
+                            RefreshToken = refreshToken
                         };
 
                         return Ok(response);
@@ -102,6 +106,20 @@ namespace NZWalks.API.Controllers
             };
 
             return Ok(userExistsResponse);
+        }
+
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromRoute] RefreshRequestDto refreshRequestDto)
+        {
+            bool isValidRefreshToken = tokenRepository.ValidateRefreshToken(refreshRequestDto.RefreshToken);
+
+            if (!isValidRefreshToken)
+            {
+                return BadRequest(new ErrorResponse("Invalid Refresh Token"));
+            }
+
+            userManager.SetAuthenticationTokenAsync
         }
     }
 }

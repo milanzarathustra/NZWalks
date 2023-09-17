@@ -7,8 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NZWalks.API.Data;
 using NZWalks.API.Mappings;
-using NZWalks.API.Middlewares;
-using NZWalks.API.Models;
+using NZWalks.API.Middlewares.Exceptions;
+using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
 using NZWalks.API.Repositories.Regions;
 using NZWalks.API.Repositories.Upload;
@@ -104,7 +104,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidIssuer = builder.Configuration["Authentication:Issuer"],
         ValidAudience = builder.Configuration["Authentication:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Authentication:AccessTokenSecret"]))
+            Encoding.UTF8.GetBytes(builder.Configuration["Authentication:AccessTokenSecret"])),
+        ClockSkew = TimeSpan.Zero
     });
 
 var app = builder.Build();

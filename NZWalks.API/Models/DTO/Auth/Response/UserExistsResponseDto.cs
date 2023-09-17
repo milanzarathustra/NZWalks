@@ -1,4 +1,4 @@
-﻿namespace NZWalks.API.Models.DTO.Auth
+﻿namespace NZWalks.API.Models.DTO.Auth.Response
 {
     public class UserExistsResponseDto
     {
