@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace NZWalks.API.CustomActionFilters
+namespace NZWalks.API.Middlewares.CustomActionFilters
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {

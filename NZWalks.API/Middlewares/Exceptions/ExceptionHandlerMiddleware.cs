@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NZWalks.API.Middlewares
+namespace NZWalks.API.Middlewares.Exceptions
 {
     public class ExceptionHandlerMiddleware
     {
@@ -20,8 +20,8 @@ namespace NZWalks.API.Middlewares
             try
             {
                 await next(httpContext);
-
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 var errorId = Guid.NewGuid();
 
@@ -38,6 +38,6 @@ namespace NZWalks.API.Middlewares
 
                 await httpContext.Response.WriteAsJsonAsync(error);
             }
-        } 
+        }
     }
 }

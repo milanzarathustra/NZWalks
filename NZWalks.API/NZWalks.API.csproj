@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Enums\Roles\" />
     <Folder Include="Logs\" />
   </ItemGroup>
 
