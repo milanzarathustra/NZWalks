@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using NZWalks.API.Enums;
-using NZWalks.API.Enums.Global;
+﻿using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Models.DTO.Auth.Request;
-using NZWalks.API.Models.DTO.Auth.Response;
-using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
 using NZWalks.API.Repositories.Token;
 
@@ -14,17 +9,22 @@ namespace NZWalks.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly AppSettings appSettings;
         private readonly ITokenRepository tokenRepository;
         private readonly IAuthRepository authRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager, AppSettings appSettings, ITokenRepository tokenRepository, IAuthRepository authRepository)
+        public AuthController( 
+            ITokenRepository tokenRepository, 
+            IAuthRepository authRepository)
         {
-            this.userManager = userManager;
-            this.appSettings = appSettings;
             this.tokenRepository = tokenRepository;
             this.authRepository = authRepository;
+        }
+
+        [HttpGet]
+        [Route("UserExists/{userName}")]
+        public async Task<IActionResult> UserExists([FromRoute] string userName)
+        {
+            return Ok(await authRepository.UserExists(userName));
         }
 
         [HttpPost]
@@ -51,27 +51,16 @@ namespace NZWalks.API.Controllers
             return Ok(loginResponse);
         }
 
-        [HttpGet]
-        [Route("UserExists/{userName}")]
-        public async Task<IActionResult> UserExists([FromRoute] string userName)
-        {
-            var user = await authRepository.UserExists(userName);
-
-            return Ok(await authRepository.UserExists(userName));
-        }
-
         [HttpPost]
         [Route("Refresh")]
-        public async Task<IActionResult> Refresh([FromRoute] RefreshRequestDto refreshRequestDto)
+        public async Task<IActionResult> Refresh(RefreshRequest refreshRequest)
         {
-            //bool isValidRefreshToken = tokenRepository.ValidateRefreshToken(refreshRequestDto.RefreshToken);
+            var refreshReponse = await tokenRepository.RefreshTokens(refreshRequest);
 
-            //if (!isValidRefreshToken)
-            //{
-            //    return BadRequest(new ErrorResponse("Invalid Refresh Token"));
-            //}
+            if (refreshReponse == null)
+                return BadRequest("Not Valid");
 
-            //userManager.SetAuthenticationTokenAsync
+            return Ok(refreshReponse);
         }
     }
 }

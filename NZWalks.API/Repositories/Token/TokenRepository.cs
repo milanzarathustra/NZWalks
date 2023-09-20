@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using NZWalks.API.Models.DTO.Auth.Response;
+using NZWalks.API.Models.DTO.Auth.Request;
 
 namespace NZWalks.API.Repositories.Token
 {
@@ -16,15 +17,21 @@ namespace NZWalks.API.Repositories.Token
         private readonly AppSettings appSettings;
         private readonly UserManager<IdentityUser> userManager;
 
-        public TokenRepository(AuthenticationConfiguration configuration, AppSettings appSettings, UserManager<IdentityUser> userManager)
+        public TokenRepository(
+            AuthenticationConfiguration configuration, 
+            AppSettings appSettings, 
+            UserManager<IdentityUser> userManager
+            )
         {
             this.configuration = configuration;
             this.appSettings = appSettings;
             this.userManager = userManager;
         }
 
-        public async Task<JwtAuthResponseViewModel> GenerateToken(IdentityUser user, IEnumerable<Claim> claims)
+        public async Task<JwtAuthResponseViewModel> GenerateTokens(IdentityUser user)
         {
+            var claims = await GetUserClaims(user);
+
             var jwtToken = new JwtSecurityToken(
                 configuration.Issuer,
                 configuration.Audience,
@@ -47,6 +54,48 @@ namespace NZWalks.API.Repositories.Token
                 AccessToken = accessToken,
                 RefreshToken = refreshTokenModel
             };
+        }
+
+        public async Task<JwtAuthResponseViewModel?> RefreshTokens(RefreshRequest refreshRequest)
+        {
+            var user = await userManager.FindByEmailAsync(refreshRequest.Email);
+
+            if (user == null)
+                return null;
+
+            var isValid = await userManager.VerifyUserTokenAsync(
+                user, 
+                appSettings.AppName,
+                ApplicationSettingsEnum.RefreshToken.GetEnumMemberValue() ?? "", 
+                refreshRequest.RefreshToken);
+
+            if (!isValid)
+            {
+                return null;
+            }
+            
+            return await GenerateTokens(user);
+        }
+
+        public async Task<IEnumerable<Claim>> GetUserClaims(IdentityUser user)
+        {
+            var roles = await userManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>
+            {
+                new Claim("id", user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            if (roles.Any())
+            {
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+            }
+
+            return claims;
         }
     }
 }

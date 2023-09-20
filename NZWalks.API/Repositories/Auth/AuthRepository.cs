@@ -5,7 +5,6 @@ using NZWalks.API.Models.DTO.Auth.Request;
 using NZWalks.API.Models.DTO.Auth.Response;
 using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Token;
-using System.Security.Claims;
 using NZWalks.API.Models.DTO.Shared;
 
 namespace NZWalks.API.Repositories.Auth
@@ -31,13 +30,15 @@ namespace NZWalks.API.Repositories.Auth
 
         public async Task<LoginResponseViewModel> Login(LoginRequest loginRequest)
         {
-            var result = await signInManager.PasswordSignInAsync(
-                loginRequest.Username,
-                loginRequest.Password,
-                false,
-                false);
-
             var user = await userManager.FindByEmailAsync(loginRequest.Username);
+
+            if (user == null)
+                throw new Exception("Fatel: Could not find user");
+
+            var result = await signInManager.CheckPasswordSignInAsync(
+                user,
+                loginRequest.Password,
+                false);            
 
             if (!result.Succeeded)
             {
@@ -55,12 +56,7 @@ namespace NZWalks.API.Repositories.Auth
                 };
             }
 
-            if (user == null)
-                throw new Exception("Fatel: Could not find user");
-
-            var userClaims = await GetUserClaims(user);
-
-            var jwtResult = await tokenRepository.GenerateToken(user, userClaims);
+            var jwtResult = await tokenRepository.GenerateTokens(user);
 
             await userManager.SetAuthenticationTokenAsync(
                 user,
@@ -142,27 +138,6 @@ namespace NZWalks.API.Repositories.Auth
                 Username = userName,
                 Exists = user != null
             };
-        }
-
-        public async Task<IEnumerable<Claim>> GetUserClaims(IdentityUser user)
-        {
-            var roles = await userManager.GetRolesAsync(user);
-
-            var claims = new List<Claim>
-            {
-                new Claim("id", user.Id),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            if (roles.Any())
-            {
-                foreach (var role in roles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
-                }
-            }
-
-            return claims;
         }
 
         #region Helpers 

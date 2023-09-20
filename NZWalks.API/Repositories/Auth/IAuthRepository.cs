@@ -7,7 +7,6 @@ namespace NZWalks.API.Repositories.Auth
 {
     public interface IAuthRepository
     {
-        Task<IEnumerable<Claim>> GetUserClaims(IdentityUser user);
         Task<LoginResponseViewModel> Login(LoginRequest loginRequest);
         Task<LoginResponseViewModel> Register(RegisterRequest registerRequest);
         Task<UserExistsResponseViewModel> UserExists(string userName);
