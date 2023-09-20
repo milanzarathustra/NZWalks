@@ -2,7 +2,7 @@
 
 namespace NZWalks.API.Models.DTO.Upload
 {
-    public class ImageUploadRequestDto
+    public class ImageUploadRequest
     {
         [Required]
         public IFormFile File { get; set; }

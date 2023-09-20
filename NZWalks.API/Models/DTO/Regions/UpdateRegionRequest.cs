@@ -2,7 +2,7 @@
 
 namespace NZWalks.API.Models.DTO.Regions
 {
-    public class UpdateRegionRequestDto
+    public class UpdateRegionRequest
     {
         [Required]
         [MinLength(3, ErrorMessage = "Code has to be a minimum of 3 characters")]

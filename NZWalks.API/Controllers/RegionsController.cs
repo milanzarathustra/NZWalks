@@ -54,9 +54,9 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         [ValidateModel]
         [Authorize(Roles = "Writer")]
-        public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto) 
+        public async Task<IActionResult> Create([FromBody] AddRegionRequest addRegionRequest) 
         {
-            var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
+            var regionDomainModel = mapper.Map<Region>(addRegionRequest);
 
             regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
 
@@ -68,9 +68,9 @@ namespace NZWalks.API.Controllers
         [Route("{id:Guid}")]
         [ValidateModel]
         [Authorize(Roles = "Writer")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequest updateRegionRequest)
         {
-            var regionDomainModel = mapper.Map<Region>(updateRegionRequestDto);
+            var regionDomainModel = mapper.Map<Region>(updateRegionRequest);
 
             regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
 
