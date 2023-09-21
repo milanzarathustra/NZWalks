@@ -1,20 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NZWalks.API.Data;
-using NZWalks.API.Mappings;
+using NZWalks.API.MappingProfiles;
 using NZWalks.API.Middlewares.Exceptions;
 using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
-using NZWalks.API.Repositories.Regions;
+using NZWalks.API.Repositories.Shared;
 using NZWalks.API.Repositories.Token;
 using NZWalks.API.Repositories.Upload;
-using NZWalks.API.Repositories.Walks;
 using Serilog;
 using System.Text;
 
@@ -32,7 +29,6 @@ builder.Logging.AddSerilog(logger);
 
 builder.Services.AddControllers(
     options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
-builder.Services.AddHttpContextAccessor(); //Only used for local image upload
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -69,11 +65,12 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<NZWalksDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnectionString")));
 builder.Services.AddDbContext<NZWalksAuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthConnectionString")));
 
-builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
-builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
-builder.Services.AddScoped<IImageRepository, LocalImageRespository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 
 builder.Services.AddOptions<AuthenticationConfiguration>()
     .Bind(builder.Configuration.GetSection("Authentication"));
@@ -83,7 +80,7 @@ builder.Services.AddOptions<AppSettings>()
     .Bind(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AppSettings>>().Value);
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
@@ -132,13 +129,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-//Only used to serve images statically - temp
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Assets")),
-    RequestPath = "/Assets"
-});
 
 app.MapControllers();
 

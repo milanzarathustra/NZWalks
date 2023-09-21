@@ -6,10 +6,10 @@ namespace NZWalks.API.Models.DTO.Auth.Request
     {
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

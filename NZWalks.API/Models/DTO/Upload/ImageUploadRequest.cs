@@ -2,13 +2,13 @@
 
 namespace NZWalks.API.Models.DTO.Upload
 {
-    public class ImageUploadRequestDto
+    public class ImageUploadRequest
     {
         [Required]
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
 
         [Required]
-        public string FileName { get; set; }
+        public string FileName { get; set; } = string.Empty;
 
         public string? FileDescription { get; set; }
     }

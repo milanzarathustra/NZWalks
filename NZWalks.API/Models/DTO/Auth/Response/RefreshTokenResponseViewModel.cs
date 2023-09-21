@@ -2,8 +2,8 @@
 {
     public class RefreshTokenResponseViewModel
     {
-        public string UserName { get; set; }
-        public string TokenString { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string TokenString { get; set; } = string.Empty;
         public DateTime ExpireAt { get; set; }
     }
 }

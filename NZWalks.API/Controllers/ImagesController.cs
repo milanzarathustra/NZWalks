@@ -19,7 +19,7 @@ namespace NZWalks.API.Controllers
 
         [HttpPost]
         [Route("Upload")]
-        public async Task<IActionResult> Upload([FromForm] ImageUploadRequestDto request)
+        public async Task<IActionResult> Upload([FromForm] ImageUploadRequest request)
         {
             ValidateFileUpload(request);
 
@@ -39,7 +39,7 @@ namespace NZWalks.API.Controllers
             return Ok(imageDomainModel);
         }
 
-        private void ValidateFileUpload(ImageUploadRequestDto request)
+        private void ValidateFileUpload(ImageUploadRequest request)
         {
             var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
 

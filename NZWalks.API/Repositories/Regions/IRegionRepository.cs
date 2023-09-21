@@ -1,13 +1,9 @@
 ﻿using NZWalks.API.Models.Domain;
+using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Repositories.Regions
 {
-    public interface IRegionRepository
+    public interface IRegionRepository : IGenericRepository<Region>
     {
-        Task<List<Region>> GetAllAsync();
-        Task<Region?> GetByIdAsync(Guid id);
-        Task<Region> CreateAsync(Region region);
-        Task<Region?> UpdateAsync(Guid id, Region region);
-        Task<Region?> DeleteAsync(Guid id);
     }
 }
