@@ -140,6 +140,31 @@ namespace NZWalks.API.Repositories.Auth
             };
         }
 
+        public Task<IEnumerable<IdentityUser>?> GetAllAsync(Query? query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IdentityUser?> GetByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> CreateAsync(IdentityUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(Guid id, IdentityUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteAsync(Guid id, bool shadowDelete = true)
+        {
+            throw new NotImplementedException();
+        }
+
         #region Helpers 
 
         private static LoginResponseViewModel Errors(IdentityResult identityResult)
@@ -163,5 +188,6 @@ namespace NZWalks.API.Repositories.Auth
         }
 
         #endregion
+
     }
 }

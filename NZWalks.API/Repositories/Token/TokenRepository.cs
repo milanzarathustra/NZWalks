@@ -36,7 +36,7 @@ namespace NZWalks.API.Repositories.Token
                 configuration.Issuer,
                 configuration.Audience,
                 claims,
-                expires: DateTime.Now.AddMinutes(configuration.AccessTokenExpirationMinutes),
+                expires: DateTime.UtcNow.AddMinutes(configuration.AccessTokenExpirationMinutes),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.AccessTokenSecret)), SecurityAlgorithms.HmacSha256));
 
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -46,7 +46,7 @@ namespace NZWalks.API.Repositories.Token
             {
                 UserName = user.Email,
                 TokenString = refreshToken,
-                ExpireAt = DateTime.Now.AddMinutes(configuration.RefreshTokenExpirationMinutes)
+                ExpireAt = DateTime.UtcNow.AddMinutes(configuration.RefreshTokenExpirationMinutes)
             };
 
             return new JwtAuthResponseViewModel

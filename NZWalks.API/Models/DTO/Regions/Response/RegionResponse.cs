@@ -1,6 +1,6 @@
-﻿namespace NZWalks.API.Models.Domain
+﻿namespace NZWalks.API.Models.DTO.Regions.Response
 {
-    public class Region : BaseEntity
+    public class RegionResponse
     {
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

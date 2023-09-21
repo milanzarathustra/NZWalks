@@ -68,14 +68,14 @@ namespace NZWalks.API.Data
                     Code = "BOP",
                     RegionImageUrl = "https://test.com/image3.png"
                 },
-                 new Region()
+                new Region()
                 {
                     Id = Guid.Parse("51440791-8a91-4e61-8f6d-602860252f93"),
                     Name = "Wellington",
                     Code = "WGN",
                     RegionImageUrl = "https://test.com/image4.png"
                 },
-                  new Region()
+                new Region()
                 {
                     Id = Guid.Parse("390b81b6-0879-481a-8720-42f5b8637c41"),
                     Name = "Nelson",

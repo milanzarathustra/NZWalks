@@ -1,21 +1,48 @@
 ﻿using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
+using NZWalks.API.Models.Shared;
 
 namespace NZWalks.API.Repositories.Upload
 {
-    public class LocalImageRespository : IImageRepository
+    public class ImageRepository : IImageRepository
     {
+        private readonly NZWalksDbContext context;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly NZWalksDbContext dbContext;
 
-        public LocalImageRespository(IWebHostEnvironment webHostEnvironment, 
+        public ImageRepository(
+            IWebHostEnvironment webHostEnvironment, 
             IHttpContextAccessor httpContextAccessor,
-            NZWalksDbContext dbContext)
+            NZWalksDbContext context)
         {
+            this.context = context;
             this.webHostEnvironment = webHostEnvironment;
             this.httpContextAccessor = httpContextAccessor;
-            this.dbContext = dbContext;
+        }
+
+        public Task<bool> CreateAsync(Region entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteAsync(Guid id, bool shadowDelete = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Region>?> GetAllAsync(Query? query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Region?> GetByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(Guid id, Region entity)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Image> Upload(Image image)
@@ -37,8 +64,8 @@ namespace NZWalks.API.Repositories.Upload
 
                 image.FilePath = filePathUrl;
 
-                await dbContext.Images.AddAsync(image);
-                await dbContext.SaveChangesAsync();
+                await context.Images.AddAsync(image);
+                await context.SaveChangesAsync();
             }
 
             return image;

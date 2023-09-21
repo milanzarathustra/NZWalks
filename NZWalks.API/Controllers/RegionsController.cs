@@ -3,99 +3,86 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Middlewares.CustomActionFilters;
 using NZWalks.API.Models.Domain;
-using NZWalks.API.Models.DTO.Regions;
-using NZWalks.API.Repositories.Regions;
+using NZWalks.API.Models.DTO.Regions.Requests;
+using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Controllers
 {
     //http://localhost:1234/api/regions
     [Route("api/[controller]")]
     [ApiController]
-    public class RegionsController : ControllerBase
+    public class RegionsController : BaseController
     {
-        private readonly IRegionRepository regionRepository;
-        private readonly IMapper mapper;
-        private readonly ILogger<RegionsController> logger;
-
         public RegionsController(
-            IRegionRepository regionRepository, 
-            IMapper mapper,
-            ILogger<RegionsController> logger) 
+            IUnitOfWork unitOfWork,
+            IMapper mapper) : base (unitOfWork, mapper) 
         { 
-            this.regionRepository = regionRepository;
-            this.mapper = mapper;
-            this.logger = logger;
         }
 
-        //GET ALL REGIONS
         [HttpGet]
-        [Authorize(Roles = "Reader, Writer")] //Either one of these roles
-        public async Task<IActionResult> GetAll()
+        //[Authorize(Roles = "Reader, Writer")] //Either one of these roles
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string? filterOn,
+            [FromQuery] string? filterQuery,
+            [FromQuery] string? sortBy,
+            [FromQuery] bool? isAscending,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 1000)
         {
-            var regionsDomain = await regionRepository.GetAllAsync();
+            var result = await unitOfWork.Region.GetAllAsync(null);
 
-            return Ok(mapper.Map<List<RegionDto>>(regionsDomain));
+            return Ok(result);
         }
 
-        //GET SINGLE REGION BY ID
         [HttpGet]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Reader")]
+        //[Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var regionDomainModel = await regionRepository.GetByIdAsync(id);
+            var result = await unitOfWork.Region.GetByIdAsync(id);
 
-            if (regionDomainModel == null) { return NotFound(); }
+            if (result == null) 
+                return NotFound();
 
-            return Ok(mapper.Map<RegionDto>(regionDomainModel));
+            return Ok(result);
         }
 
-        //POST CREATE REGION
         [HttpPost]
         [ValidateModel]
-        [Authorize(Roles = "Writer")]
-        public async Task<IActionResult> Create([FromBody] AddRegionRequest addRegionRequest) 
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> Create([FromBody] CreateRegionRequest createRegionRequest) 
         {
-            var regionDomainModel = mapper.Map<Region>(addRegionRequest);
+            var result = mapper.Map<Region>(createRegionRequest);
 
-            regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
+            await unitOfWork.Region.CreateAsync(result);
+            await unitOfWork.CompleteAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = regionDomainModel.Id }, mapper.Map<RegionDto>(regionDomainModel));
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
-        //PUT UPDATE REGION
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequest updateRegionRequest)
         {
-            var regionDomainModel = mapper.Map<Region>(updateRegionRequest);
+            var result = mapper.Map<Region>(updateRegionRequest);
 
-            regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
+            await unitOfWork.Region.UpdateAsync(id, result);
+            await unitOfWork.CompleteAsync();
 
-            if (regionDomainModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(mapper.Map<RegionDto>(regionDomainModel));
+            return NoContent();
         }
 
-        //DELETE A REGION
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var regionDomainModel = await regionRepository.DeleteAsync(id);
+            await unitOfWork.Region.DeleteAsync(id);
+            await unitOfWork.CompleteAsync();
 
-            if (regionDomainModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(mapper.Map<RegionDto>(regionDomainModel));
+            return NoContent();
         }
     }
 }
