@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Middlewares.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO.Regions.Requests;
+using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Controllers
@@ -22,16 +23,11 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         //[Authorize(Roles = "Reader, Writer")] //Either one of these roles
         public async Task<IActionResult> GetAll(
-            [FromQuery] string? filterOn,
-            [FromQuery] string? filterQuery,
-            [FromQuery] string? sortBy,
-            [FromQuery] bool? isAscending,
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 1000)
+            [FromQuery] Filter filter)
         {
-            var result = await unitOfWork.Region.GetAllAsync(null);
+            var result = await unitOfWork.Region.GetAllAsync(filter);
 
-            return Ok(result);
+            return Ok(mapper.Map<IEnumerable<RegionDto>>(result));
         }
 
         [HttpGet]
@@ -44,7 +40,7 @@ namespace NZWalks.API.Controllers
             if (result == null) 
                 return NotFound();
 
-            return Ok(result);
+            return Ok(mapper.Map<RegionDto>(result));
         }
 
         [HttpPost]
@@ -57,7 +53,7 @@ namespace NZWalks.API.Controllers
             await unitOfWork.Region.CreateAsync(result);
             await unitOfWork.CompleteAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, mapper.Map<RegionDto>(result));
         }
 
         [HttpPut]

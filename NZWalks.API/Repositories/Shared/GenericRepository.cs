@@ -20,7 +20,7 @@ namespace NZWalks.API.Repositories.Shared
             this.dbSet = context.Set<T>();
         }
 
-        public virtual Task<IEnumerable<T>?> GetAllAsync(Query? query)
+        public virtual Task<IEnumerable<T>?> GetAllAsync(Filter filter)
         {
             throw new NotImplementedException();
         }

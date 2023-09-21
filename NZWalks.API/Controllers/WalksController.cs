@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Middlewares.CustomActionFilters;
 using NZWalks.API.Models.Domain;
+using NZWalks.API.Models.DTO.Regions.Requests;
 using NZWalks.API.Models.DTO.Walks.Requests;
+using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Shared;
-using NZWalks.API.Repositories.Walks;
-using System.Security.AccessControl;
 
 namespace NZWalks.API.Controllers
 {
@@ -22,18 +23,13 @@ namespace NZWalks.API.Controllers
         //GET ALL WALKS
         [HttpGet]
         public async Task<IActionResult> GetAll(
-            [FromQuery] string? filterOn, 
-            [FromQuery] string? filterQuery, 
-            [FromQuery] string? sortBy, 
-            [FromQuery] bool? isAscending,
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 1000)
+            [FromQuery] Filter filter)
         {
-            var result = await unitOfWork.Walk.GetAllAsync(null);
+            var result = await unitOfWork.Walk.GetAllAsync(filter);
 
             //throw new Exception("This is a custom exception");
 
-            return Ok(result);
+            return Ok(mapper.Map<IEnumerable<WalkDto>>(result));
         }
 
         [HttpGet]
@@ -57,7 +53,7 @@ namespace NZWalks.API.Controllers
             await unitOfWork.Walk.CreateAsync(result);
             await unitOfWork.CompleteAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, mapper.Map<WalkDto>(result));
         }
 
         [HttpPut]

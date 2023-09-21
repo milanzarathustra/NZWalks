@@ -140,7 +140,7 @@ namespace NZWalks.API.Repositories.Auth
             };
         }
 
-        public Task<IEnumerable<IdentityUser>?> GetAllAsync(Query? query)
+        public Task<IEnumerable<IdentityUser>?> GetAllAsync(Filter? query)
         {
             throw new NotImplementedException();
         }

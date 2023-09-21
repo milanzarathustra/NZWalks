@@ -10,29 +10,29 @@ namespace NZWalks.API.MappingProfiles
     {
         public AutoMapperProfiles()
         {
-            ////Regions
-            //CreateMap<Region, RegionDto>().ReverseMap();
-            //CreateMap<CreateRegionRequest, Region>()
-            //    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 1))
-            //    .ForMember(dest => dest.AddedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
-            //    .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
-            //    .ReverseMap();
-            //CreateMap<UpdateRegionRequest, Region>()
-            //    .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
-            //    .ReverseMap();
+            //Regions
+            CreateMap<Region, RegionDto>().ReverseMap();
+            CreateMap<CreateRegionRequest, Region>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.AddedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ReverseMap();
+            CreateMap<UpdateRegionRequest, Region>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ReverseMap();
 
-            ////Walks
-            //CreateMap<Walk, WalkDto>().ReverseMap();
-            //CreateMap<CreateWalkRequest, Walk>()
-            //    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 1))
-            //    .ForMember(dest => dest.AddedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
-            //    .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+            //Walks
+            CreateMap<Walk, WalkDto>().ReverseMap();
+            CreateMap<CreateWalkRequest, Walk>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.AddedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-            //CreateMap<UpdateWalkRequest, Walk>()
-            //    .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+            CreateMap<UpdateWalkRequest, Walk>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-            ////Difficulty
-            //CreateMap<Difficulty, DifficultyDto>().ReverseMap();
+            //Difficulty
+            CreateMap<Difficulty, DifficultyDto>().ReverseMap();
         }
     }
 }

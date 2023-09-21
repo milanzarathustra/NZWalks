@@ -4,7 +4,7 @@ namespace NZWalks.API.Repositories.Shared
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<IEnumerable<T>?> GetAllAsync(Query? query);
+        Task<IEnumerable<T>?> GetAllAsync(Filter filter);
         Task<T?> GetByIdAsync(Guid id);
         Task<bool> CreateAsync(T entity);
         Task<bool> UpdateAsync(Guid id, T entity);

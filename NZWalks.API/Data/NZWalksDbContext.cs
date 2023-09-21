@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NZWalks.API.Enums.Global;
 using NZWalks.API.Models.Domain;
 
 namespace NZWalks.API.Data
@@ -52,35 +53,50 @@ namespace NZWalks.API.Data
                     Id = Guid.Parse("b082d575-2826-4277-91f5-d300ddcf3438"),
                     Name = "AuckLand",
                     Code = "AKL",
-                    RegionImageUrl = "https://test.com/image1.png"
+                    RegionImageUrl = "https://test.com/image1.png",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
                 },
                 new Region()
                 {
                     Id = Guid.Parse("a4f8ab81-6c1a-4935-b996-d77d822ac369"),
                     Name = "NorthLand",
                     Code = "NTL",
-                    RegionImageUrl = "https://test.com/image2.png"
+                    RegionImageUrl = "https://test.com/image2.png",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
                 },
                 new Region()
                 {
                     Id = Guid.Parse("84a43188-0df0-4337-a9fa-e7851cddff14"),
                     Name = "Bay of Plenty",
                     Code = "BOP",
-                    RegionImageUrl = "https://test.com/image3.png"
+                    RegionImageUrl = "https://test.com/image3.png",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
                 },
                 new Region()
                 {
                     Id = Guid.Parse("51440791-8a91-4e61-8f6d-602860252f93"),
                     Name = "Wellington",
                     Code = "WGN",
-                    RegionImageUrl = "https://test.com/image4.png"
+                    RegionImageUrl = "https://test.com/image4.png",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
                 },
                 new Region()
                 {
                     Id = Guid.Parse("390b81b6-0879-481a-8720-42f5b8637c41"),
                     Name = "Nelson",
                     Code = "NSN",
-                    RegionImageUrl = "https://test.com/image5.png"
+                    RegionImageUrl = "https://test.com/image5.png",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
                 },
             };
 

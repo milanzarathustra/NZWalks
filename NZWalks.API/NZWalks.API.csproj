@@ -30,6 +30,8 @@
   <ItemGroup>
     <Folder Include="Enums\Roles\" />
     <Folder Include="Logs\" />
+    <Folder Include="Models\DTO\Regions\Response\" />
+    <Folder Include="Models\DTO\Walks\Response\" />
   </ItemGroup>
 
 </Project>

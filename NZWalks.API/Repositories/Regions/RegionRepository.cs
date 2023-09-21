@@ -13,7 +13,7 @@ namespace NZWalks.API.Repositories.Regions
         {
         }
 
-        public override async Task<IEnumerable<Region>?> GetAllAsync(Query? query)
+        public override async Task<IEnumerable<Region>?> GetAllAsync(Filter filter)
         {
             return await context.Regions.ToListAsync();
         }

@@ -30,7 +30,7 @@ namespace NZWalks.API.Repositories.Upload
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Region>?> GetAllAsync(Query? query)
+        public Task<IEnumerable<Region>?> GetAllAsync(Filter? query)
         {
             throw new NotImplementedException();
         }
