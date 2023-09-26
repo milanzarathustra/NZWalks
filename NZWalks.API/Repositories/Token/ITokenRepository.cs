@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO.Auth.Request;
 using NZWalks.API.Models.DTO.Auth.Response;
-using NZWalks.API.Repositories.Shared;
 using System.Security.Claims;
 
 namespace NZWalks.API.Repositories.Token

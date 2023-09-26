@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Middlewares.CustomActionFilters;
@@ -16,7 +17,8 @@ namespace NZWalks.API.Controllers
     {
         public WalksController(
             IUnitOfWork unitOfWork,
-            IMapper mapper) : base(unitOfWork, mapper)
+            IMapper mapper,
+            IMediator mediator) : base(unitOfWork, mapper, mediator)
         {
         }
 
