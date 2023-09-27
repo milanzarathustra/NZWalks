@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NZWalks.API.Enums.Global;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO.Difficulties;
 using NZWalks.API.Models.DTO.Regions.Requests;
@@ -13,7 +14,7 @@ namespace NZWalks.API.MappingProfiles
             //Regions
             CreateMap<Region, RegionDto>().ReverseMap();
             CreateMap<CreateRegionRequest, Region>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => StatusEnum.Live))
                 .ForMember(dest => dest.AddedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ReverseMap();
