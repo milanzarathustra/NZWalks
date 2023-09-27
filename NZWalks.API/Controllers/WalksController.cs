@@ -11,8 +11,6 @@ using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class WalksController : BaseController
     {
         public WalksController(

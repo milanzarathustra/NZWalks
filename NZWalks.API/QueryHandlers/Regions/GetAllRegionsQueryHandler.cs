@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using MediatR;
 using NZWalks.API.Models.DTO.Regions.Requests;
-using NZWalks.API.Queries;
+using NZWalks.API.Queries.Regions;
 using NZWalks.API.Repositories.Shared;
 
-namespace NZWalks.API.Handlers
+namespace NZWalks.API.QueryHandlers.Regions
 {
-    public class GetAllRegionsHandler : IRequestHandler<GetAllRegionsQuery, IEnumerable<RegionDto>>
+    public class GetAllRegionsQueryHandler : IRequestHandler<GetAllRegionsQuery, IEnumerable<RegionDto>>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public GetAllRegionsHandler(
+        public GetAllRegionsQueryHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {

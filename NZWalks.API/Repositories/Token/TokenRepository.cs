@@ -20,8 +20,7 @@ namespace NZWalks.API.Repositories.Token
         public TokenRepository(
             AuthenticationConfiguration configuration, 
             AppSettings appSettings, 
-            UserManager<IdentityUser> userManager
-            )
+            UserManager<IdentityUser> userManager)
         {
             this.configuration = configuration;
             this.appSettings = appSettings;

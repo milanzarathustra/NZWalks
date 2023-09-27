@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using NZWalks.API.Models.DTO.Regions.Requests;
 
-namespace NZWalks.API.Commands
+namespace NZWalks.API.Commands.Regions
 {
     public class UpdateRegionInfoRequest : IRequest<bool>
     {

@@ -1,15 +1,16 @@
 ﻿using MediatR;
 using NZWalks.API.Models.DTO.Regions.Requests;
 
-namespace NZWalks.API.Queries
+namespace NZWalks.API.Commands.Regions
 {
-    public class GetRegionQuery : IRequest<RegionDto>
+    public class DeleteRegionInfoRequest : IRequest<bool>
     {
         public Guid Id { get; }
 
-        public GetRegionQuery(Guid id)
+        public DeleteRegionInfoRequest(Guid id)
         {
             Id = id;
         }
+
     }
 }

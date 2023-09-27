@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using NZWalks.API.Commands;
+using NZWalks.API.Commands.Regions;
 using NZWalks.API.Repositories.Shared;
 
-namespace NZWalks.API.Handlers
+namespace NZWalks.API.CommandHandlers.Regions
 {
-    public class DeleteRegionHandler : IRequestHandler<DeleteRegionInfoRequest, bool>
+    public class DeleteRegionCommandHandler : IRequestHandler<DeleteRegionInfoRequest, bool>
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public DeleteRegionHandler(
+        public DeleteRegionCommandHandler(
             IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;

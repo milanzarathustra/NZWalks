@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using NZWalks.API.Commands;
+using NZWalks.API.Commands.Regions;
 using NZWalks.API.Middlewares.CustomActionFilters;
 using NZWalks.API.Models.DTO.Regions.Requests;
 using NZWalks.API.Models.Shared;
-using NZWalks.API.Queries;
+using NZWalks.API.Queries.Regions;
 using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Controllers
 {
-    //http://localhost:1234/api/regions
-    [Route("api/[controller]")]
-    [ApiController]
     public class RegionsController : BaseController
     {
         public RegionsController(

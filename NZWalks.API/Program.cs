@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NZWalks.API.Data;
-using NZWalks.API.MappingProfiles;
 using NZWalks.API.Middlewares.Exceptions;
 using NZWalks.API.Models.Shared;
 using NZWalks.API.Repositories.Auth;
