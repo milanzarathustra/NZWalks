@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using MediatR;
-using NZWalks.API.Commands.Regions;
+using NZWalks.API.Commands.Walks;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Repositories.Shared;
 
-namespace NZWalks.API.CommandHandlers.Regions
+namespace NZWalks.API.CommandHandlers.Walks
 {
-    public class UpdateRegionCommandHandler : IRequestHandler<UpdateRegionInfoRequest, bool>
+    public class UpdateWalkCommandHandler : IRequestHandler<UpdateWalkInfoRequest, bool>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public UpdateRegionCommandHandler(
+        public UpdateWalkCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -19,11 +19,11 @@ namespace NZWalks.API.CommandHandlers.Regions
             this.mapper = mapper;
         }
 
-        public async Task<bool> Handle(UpdateRegionInfoRequest request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateWalkInfoRequest request, CancellationToken cancellationToken)
         {
-            var region = mapper.Map<Region>(request.RegionRequest);
+            var walk = mapper.Map<Walk>(request.WalkRequest);
 
-            await unitOfWork.Region.UpdateAsync(request.Id, region);
+            await unitOfWork.Walk.UpdateAsync(request.Id, walk);
             await unitOfWork.CompleteAsync();
 
             return true;

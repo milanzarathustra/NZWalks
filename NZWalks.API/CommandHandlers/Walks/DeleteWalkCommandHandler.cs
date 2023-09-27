@@ -2,13 +2,13 @@
 using NZWalks.API.Commands.Walks;
 using NZWalks.API.Repositories.Shared;
 
-namespace NZWalks.API.CommandHandlers.Regions
+namespace NZWalks.API.CommandHandlers.Walks
 {
-    public class DeleteRegionCommandHandler : IRequestHandler<DeleteWalkInfoRequest, bool>
+    public class DeleteWalkCommandHandler : IRequestHandler<DeleteWalkInfoRequest, bool>
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public DeleteRegionCommandHandler(
+        public DeleteWalkCommandHandler(
             IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
@@ -16,7 +16,7 @@ namespace NZWalks.API.CommandHandlers.Regions
 
         public async Task<bool> Handle(DeleteWalkInfoRequest request, CancellationToken cancellationToken)
         {
-            var isDeleted = await unitOfWork.Region.DeleteAsync(request.Id);
+            var isDeleted = await unitOfWork.Walk.DeleteAsync(request.Id);
 
             if (!isDeleted)
                 return false;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NZRegions.API.Commands.Regions;
 using NZWalks.API.Commands.Regions;
 using NZWalks.API.Middlewares.CustomActionFilters;
 using NZWalks.API.Models.DTO.Regions.Requests;

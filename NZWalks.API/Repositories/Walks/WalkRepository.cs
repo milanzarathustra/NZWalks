@@ -15,7 +15,7 @@ namespace NZWalks.API.Repositories.Walks
 
         public override async Task<IEnumerable<Walk>?> GetAllAsync(Filter filter)
         {
-            var walks = context.Walks.Include(x => x.Difficulty).Include(x => x.Region).AsQueryable();
+            var walks = context.Walks.Include(x => x.Difficulty).Include(x => x.Region).Where(o => o.Status != (int)StatusEnum.Deleted).AsQueryable();
 
             //Filtering
             if (!string.IsNullOrWhiteSpace(filter.FilterOn) && !string.IsNullOrWhiteSpace(filter.FilterQuery))

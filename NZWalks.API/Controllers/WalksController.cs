@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.Commands.Walks;
 using NZWalks.API.Middlewares.CustomActionFilters;
-using NZWalks.API.Models.Domain;
-using NZWalks.API.Models.DTO.Regions.Requests;
 using NZWalks.API.Models.DTO.Walks.Requests;
 using NZWalks.API.Models.Shared;
+using NZWalks.API.Queries.Walks;
 using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Controllers
@@ -20,63 +19,65 @@ namespace NZWalks.API.Controllers
         {
         }
 
-        //GET ALL WALKS
         [HttpGet]
+        //[Authorize(Roles = "Reader, Writer")] //Either one of these roles
         public async Task<IActionResult> GetAll(
             [FromQuery] Filter filter)
         {
-            var result = await unitOfWork.Walk.GetAllAsync(filter);
+            var query = new GetAllWalksQuery(filter);
 
-            //throw new Exception("This is a custom exception");
+            var result = await mediator.Send(query);
 
-            return Ok(mapper.Map<IEnumerable<WalkDto>>(result));
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
+        //[Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var result = await unitOfWork.Walk.GetByIdAsync(id);
+            var query = new GetWalkQuery(id);
 
-            if (result == null)
-                return NotFound();
+            var result = await mediator.Send(query);
 
             return Ok(result);
         }
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody] CreateWalkRequest addWalkRequest)
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> Create([FromBody] CreateWalkRequest createWalkRequest)
         {
-            var result = mapper.Map<Walk>(addWalkRequest);
+            var command = new CreateWalkInfoRequest(createWalkRequest);
 
-            await unitOfWork.Walk.CreateAsync(result);
-            await unitOfWork.CompleteAsync();
+            var result = await mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, mapper.Map<WalkDto>(result));
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateWalkRequest updateWalkRequest)
         {
-            var result = mapper.Map<Walk>(updateWalkRequest);
+            var command = new UpdateWalkInfoRequest(id, updateWalkRequest);
 
-            await unitOfWork.Walk.UpdateAsync(id, result);
-            await unitOfWork.CompleteAsync();
+            var result = await mediator.Send(command);
 
-            return NoContent();
+            return result ? NoContent() : BadRequest();
         }
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            await unitOfWork.Walk.DeleteAsync(id);
-            await unitOfWork.CompleteAsync();
+            var command = new DeleteWalkInfoRequest(id);
 
-            return NoContent();
+            var result = await mediator.Send(command);
+
+            return result ? NoContent() : BadRequest();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using MediatR;
-using NZWalks.API.Models.DTO.Regions.Requests;
 
-namespace NZWalks.API.Commands.Regions
+namespace NZRegions.API.Commands.Regions
 {
     public class DeleteRegionInfoRequest : IRequest<bool>
     {

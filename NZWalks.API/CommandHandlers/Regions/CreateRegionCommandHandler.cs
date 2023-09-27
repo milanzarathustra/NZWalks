@@ -5,7 +5,7 @@ using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO.Regions.Requests;
 using NZWalks.API.Repositories.Shared;
 
-namespace NZWalks.API.CommandHandlers.Regions
+namespace NZRegions.API.CommandHandlers.Regions
 {
     public class CreateRegionCommandHandler : IRequestHandler<CreateRegionInfoRequest, RegionDto>
     {
