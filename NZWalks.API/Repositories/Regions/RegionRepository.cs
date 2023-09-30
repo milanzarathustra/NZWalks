@@ -15,7 +15,30 @@ namespace NZWalks.API.Repositories.Regions
 
         public override async Task<IEnumerable<Region>?> GetAllAsync(Filter filter)
         {
-            return await context.Regions.ToListAsync();
+            var regions = context.Regions.Where(o => o.Status != (int)StatusEnum.Deleted).AsQueryable();
+
+            //Filtering
+            if (!string.IsNullOrWhiteSpace(filter.FilterOn) && !string.IsNullOrWhiteSpace(filter.FilterQuery))
+            {
+                if (filter.FilterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    regions = regions.Where(x => x.Name.Contains(filter.FilterQuery));
+                }
+            }
+
+            //Sorting
+            if (!string.IsNullOrWhiteSpace(filter.SortBy))
+            {
+                if (filter.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    regions = filter.IsAscending ? regions.OrderBy(x => x.Name) : regions.OrderByDescending(x => x.Name);
+                }
+            }
+
+            //Pagination
+            var skipPages = (filter.PageNumber - 1) * filter.PageSize;
+
+            return await regions.Skip(skipPages).Take(filter.PageSize).ToListAsync();
         }
 
         public override async Task<Region?> GetByIdAsync(Guid id)

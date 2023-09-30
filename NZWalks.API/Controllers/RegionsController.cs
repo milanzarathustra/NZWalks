@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NZRegions.API.Commands.Regions;
+using NZWalks.API.Commands.Regions;
 using NZWalks.API.Middlewares.CustomActionFilters;
-using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO.Regions.Requests;
 using NZWalks.API.Models.Shared;
+using NZWalks.API.Queries.Regions;
 using NZWalks.API.Repositories.Shared;
 
 namespace NZWalks.API.Controllers
 {
-    //http://localhost:1234/api/regions
-    [Route("api/[controller]")]
-    [ApiController]
     public class RegionsController : BaseController
     {
         public RegionsController(
             IUnitOfWork unitOfWork,
-            IMapper mapper) : base (unitOfWork, mapper) 
-        { 
+            IMapper mapper,
+            IMediator mediator) : base(unitOfWork, mapper, mediator)
+        {
         }
 
         [HttpGet]
@@ -25,9 +25,11 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> GetAll(
             [FromQuery] Filter filter)
         {
-            var result = await unitOfWork.Region.GetAllAsync(filter);
+            var query = new GetAllRegionsQuery(filter);
 
-            return Ok(mapper.Map<IEnumerable<RegionDto>>(result));
+            var result = await mediator.Send(query);
+
+            return Ok(result);
         }
 
         [HttpGet]
@@ -35,12 +37,11 @@ namespace NZWalks.API.Controllers
         //[Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var result = await unitOfWork.Region.GetByIdAsync(id);
+            var query = new GetRegionQuery(id);
 
-            if (result == null) 
-                return NotFound();
+            var result = await mediator.Send(query);
 
-            return Ok(mapper.Map<RegionDto>(result));
+            return Ok(result);
         }
 
         [HttpPost]
@@ -48,12 +49,11 @@ namespace NZWalks.API.Controllers
         //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] CreateRegionRequest createRegionRequest) 
         {
-            var result = mapper.Map<Region>(createRegionRequest);
+            var command = new CreateRegionInfoRequest(createRegionRequest);
 
-            await unitOfWork.Region.CreateAsync(result);
-            await unitOfWork.CompleteAsync();
+            var result = await mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, mapper.Map<RegionDto>(result));
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
         [HttpPut]
@@ -62,12 +62,11 @@ namespace NZWalks.API.Controllers
         //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequest updateRegionRequest)
         {
-            var result = mapper.Map<Region>(updateRegionRequest);
+            var command = new UpdateRegionInfoRequest(id, updateRegionRequest);
 
-            await unitOfWork.Region.UpdateAsync(id, result);
-            await unitOfWork.CompleteAsync();
+            var result = await mediator.Send(command);
 
-            return NoContent();
+            return result ? NoContent() : BadRequest();
         }
 
         [HttpDelete]
@@ -75,10 +74,11 @@ namespace NZWalks.API.Controllers
         //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            await unitOfWork.Region.DeleteAsync(id);
-            await unitOfWork.CompleteAsync();
+            var command = new DeleteRegionInfoRequest(id);
 
-            return NoContent();
+            var result = await mediator.Send(command);
+
+            return result ? NoContent() : BadRequest();
         }
     }
 }

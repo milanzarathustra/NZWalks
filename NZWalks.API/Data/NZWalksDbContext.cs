@@ -7,7 +7,7 @@ namespace NZWalks.API.Data
     public class NZWalksDbContext: DbContext
     {
         public NZWalksDbContext(DbContextOptions<NZWalksDbContext> dbContextOptions) : base(dbContextOptions)
-        {                  
+        {     
         }
 
         public DbSet<Difficulty> Difficulties { get; set; }
@@ -28,17 +28,26 @@ namespace NZWalks.API.Data
                 new Difficulty()
                 {
                     Id = Guid.Parse("82ff4bef-e4d8-4784-a45d-e09038b6b95d"),
-                    Name = "Easy"
+                    Name = "Easy",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow,
                 },
                 new Difficulty()
                 {
                     Id = Guid.Parse("0be7662a-6cf8-45ca-aa0e-9088d9b41ece"),
-                    Name = "Medium"
+                    Name = "Medium",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow,
                 },
                 new Difficulty()
                 {
                     Id = Guid.Parse("cc765ba3-3470-471f-915d-100fe14fdef0"),
-                    Name = "Hard"
+                    Name = "Hard",
+                    Status = (int)StatusEnum.Live,
+                    AddedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow,
                 }
             };
 

@@ -5,6 +5,8 @@ namespace NZWalks.API.Enums.Global
     public enum StatusEnum
     {
         Deleted = 0,
-        Live = 1
+        Draft = 1,
+        Live = 2,
+        Revoked = 3
     }
 }
